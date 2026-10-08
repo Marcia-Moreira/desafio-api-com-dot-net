@@ -480,3 +480,8 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+
+# Diversos:
+rascunhos-mm/
+README-1.md
