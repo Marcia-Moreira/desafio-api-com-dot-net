@@ -1,7 +1,7 @@
 <div align="center">
   <h1>📌 Sistema de Gerenciamento de Tarefas</h1>
   <h3>Bootcamp de Desenvolvimento Backend com .NET | WoMakersCode</h3>
-  <div style="height: 6px; background: linear-gradient(90deg, #7B2CBF, #C77DFF); border-radius: 3px; margin: 10px 0;"></div>
+  <img src="https://capsule-render.vercel.app/api?type=rect&color=C77DFF&height=6&width=800" alt="" />
   <h2><strong>Desafio Final API com Dot Net — Squad Carmem Portinho</strong></h2>
 </div>
 
@@ -98,3 +98,7 @@ Para garantir que o código de todas se integre sem quebrar o projeto, siga o pa
   * `docs/nome-do-texto` — Para atualizações de README
 * Quando finalizar sua parte, envie para o GitHub (`git push`) e abra um Pull Request (PR) apontando para a `main`.
 * Uma colega de equipe deverá fazer o Code Review do seu PR, verificando se o código resolve o objetivo da tarefa. O código só entra na `main` após revisão e aprovação.
+
+<div align="center">
+  <img src="https://capsule-render.vercel.app/api?type=rect&color=C77DFF&height=6&width=800" alt="" />
+</div>
