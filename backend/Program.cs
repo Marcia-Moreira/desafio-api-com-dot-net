@@ -13,6 +13,7 @@ builder.Services.AddControllers();
 
 // 3. Adiciona os serviços para documentar a API (OpenAPI/Swagger)
 builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -20,6 +21,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
