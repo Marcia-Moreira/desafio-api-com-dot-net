@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using GerenciadorTarefas.API.Data;
 using GerenciadorTarefas.API.UsuariasModels;
 using GerenciadorTarefas.API.UsuariasServices;
-using System.Formats.Tar;
-namespace GerenciadorTarefas.API.UsuariasControllers;
 
+namespace GerenciadorTarefas.API.UsuariasControllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -21,23 +18,33 @@ public class UsuariasController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> ListarUsuarias()
     {
-        var usuarias = await _service.ListarUsuariasAsync();
-        return Ok(usuarias);
+        try
+        {
+            var usuarias = await _service.ListarUsuariasAsync();
+            return Ok(usuarias);
+        }
+        catch(Exception)
+        {
+            return StatusCode(500, $"Ocorreu um erro ao listar as usuárias.");
+        }
     }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> BuscarPorId(int id)
     {
-        var tarefaID = await _service.BuscarTarefaId(id);
-        if(!tarefaID)
+        try
         {
-            return NotFound($"Usuária não possui tarefas associadas.");
+            var usuaria = await _service.BuscarPorIdAsync(id);
+            if(usuaria == null)
+            {
+                return NotFound($"Usuária {id} não encontrada.");
+            }
+            return Ok(usuaria);
         }
-        var usuariaId = await _service.BuscarPorIdAsync(id);
-        if(usuariaId == null)
+        catch(Exception)
         {
-            return NotFound($"Usuária {id} não encontrada.");
+            return StatusCode(500, $"Ocorreu um erro ao buscar a usuária {id}.");
         }
-        return Ok(usuariaId);
     }
 
     [HttpPost]
@@ -56,6 +63,10 @@ public class UsuariasController : ControllerBase
         {
             return BadRequest(ex);
         }
+        catch(Exception)
+        {
+            return StatusCode(500, $"Ocorreu um erro ao criar a usuária {usuaria.Nome}.");
+        }
     }
 
     [HttpPut("{id}")]
@@ -65,28 +76,37 @@ public class UsuariasController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-        var usuaria = await _service.AtualizarUsuariaAsync(usuariaAtualizada);
-        if(usuaria == null)
+        try 
         {
-            return NotFound($"Usuaria {usuariaAtualizada.Nome} não encontrada.");
+            var usuaria = await _service.AtualizarUsuariaAsync(usuariaAtualizada);
+            if(usuaria == null)
+            {
+                return NotFound($"Usuária {usuariaAtualizada.Nome} não encontrada.");
+            }
+            return Ok($"Informações da usuária {usuariaAtualizada.Nome} atualizadas.");
         }
-
-        usuaria.Nome = usuariaAtualizada.Nome;
-        usuaria.Email = usuariaAtualizada.Email;
-        usuaria.Senha = usuariaAtualizada.Senha;
-
-        return Ok($"Informações da usuária {usuariaAtualizada.Nome} atualizadas.");
+        catch(Exception)
+        {
+            return StatusCode(500, $"Ocorreu um erro ao atualizar a usuária {usuariaAtualizada.Nome}.");
+        }
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> RemoverUsuaria(int id)
     {
-        var usuaria = await _service.RemoverUsuariaAsync(id);
-        if(!usuaria)
+        try
         {
-            return NotFound($"Usuária {id} não encontrada.");   
-        }
-        return NoContent();
-    }
+            var removida = await _service.RemoverUsuariaAsync(id);
+            if (!removida)
+            {
+                return NotFound(new { mensagem = $"Usuária com ID {id} não foi encontrada para remoção." });
+            }
 
+            return NoContent(); // 204 No Content para exclusões bem-sucedidas
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, new { mensagem = "Ocorreu um erro interno ao remover a usuária." });
+        }
+    }
 }

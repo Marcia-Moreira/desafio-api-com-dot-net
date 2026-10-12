@@ -7,7 +7,9 @@ namespace GerenciadorTarefas.API.TarefasModels
         public int Id { get; set; }
 
         [Required(ErrorMessage = "O título da tarefa é obrigatório.")]
+        [StringLength(100, ErrorMessage = "O título da tarefa não pode exceder 100 caracteres.")]
         public string Titulo { get; set; } = string.Empty;
+        [MaxLength(500, ErrorMessage = "A descrição da tarefa não pode exceder 500 caracteres.")]
         public string Descricao { get; set; } = string.Empty;
         public DateTime DataVencimento { get; set; }
         public bool Concluida { get; set; } = false;
@@ -21,8 +23,15 @@ namespace GerenciadorTarefas.API.TarefasModels
     public class TarefasDto
     {
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "O título da tarefa é obrigatório.")]
+        [StringLength(100, ErrorMessage = "O título da tarefa não pode exceder 100 caracteres.")]
         public string? Titulo { get; set; }
+
+        [MaxLength(500, ErrorMessage = "A descrição da tarefa não pode exceder 500 caracteres.")]
         public string? Descricao { get; set; }
+        
+        [Required(ErrorMessage = "A data de vencimento é obrigatória.")]
         public DateTime DataVencimento { get; set; }
         public bool Concluida { get; set; }
         public int UsuariaId { get; set; }
