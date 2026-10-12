@@ -5,7 +5,7 @@ using GerenciadorTarefas.API.TarefasServices;
 using GerenciadorTarefas.API.UsuariasRepositories;
 using GerenciadorTarefas.API.UsuariasServices;
 using GerenciadorTarefas.API.TarefasControllers;
-using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
