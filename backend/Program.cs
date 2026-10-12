@@ -1,5 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using GerenciadorTarefas.API.Data;
+using GerenciadorTarefas.API.TarefasRepositories;
+using GerenciadorTarefas.API.TarefasServices;
+using GerenciadorTarefas.API.TarefasControllers;
+using GerenciadorTarefas.API.UsuariasRepositories;
+using GerenciadorTarefas.API.UsuariasServices;
+using GerenciadorTarefas.API.UsuariasControllers;
 
 // O builder é declarado apenas uma vez
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +20,11 @@ builder.Services.AddControllers();
 // 3. Adiciona os serviços para documentar a API (OpenAPI/Swagger)
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=tarefas.db"));
+builder.Services.AddScoped<ITarefasRepository, TarefasRepository>();
+builder.Services.AddScoped<ITarefasService, TarefasService>(); 
+builder.Services.AddScoped<IUsuariasRepository, UsuariasRepository>();
+builder.Services.AddScoped<IUsuariasService, UsuariasService>(); 
 
 var app = builder.Build();
 

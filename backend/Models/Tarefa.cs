@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-namespace GerenciadorTarefas.API.Models
+namespace GerenciadorTarefas.API.TarefasModels
 {
     public class Tarefa
     {
@@ -16,5 +16,16 @@ namespace GerenciadorTarefas.API.Models
         [Required(ErrorMessage = "A tarefa precisa ser associada a uma usuária, o id é obrigatório.")]
         public int UsuariaId { get; set; }
        // public Usuaria? Usuaria { get; set; }
+    }
+
+    public class TarefasDto
+    {
+        public int Id { get; set; }
+        public string? Titulo { get; set; }
+        public string? Descricao { get; set; }
+        public DateTime DataVencimento { get; set; }
+        public bool Concluida { get; set; }
+        public int UsuariaId { get; set; }
+        public string? NomeUsuaria { get; set; }
     }
 }

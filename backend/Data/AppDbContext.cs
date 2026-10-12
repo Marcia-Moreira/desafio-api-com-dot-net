@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using GerenciadorTarefas.API.Models;
+using GerenciadorTarefas.API.TarefasModels;
+using GerenciadorTarefas.API.UsuariasModels;
 
 namespace GerenciadorTarefas.API.Data
 {
