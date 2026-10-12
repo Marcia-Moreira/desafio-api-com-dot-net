@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GerenciadorTarefas.API.Data;
-using GerenciadorTarefas.API.Models;
+using GerenciadorTarefas.API.UsuariasModels;
+using GerenciadorTarefas.API.UsuariasServices;
 using System.Formats.Tar;
-namespace backend.Controllers;
+namespace GerenciadorTarefas.API.UsuariasControllers;
 
 
 [ApiController]
@@ -11,31 +12,32 @@ namespace backend.Controllers;
 
 public class UsuariasController : ControllerBase
 {
-    private readonly AppDbContext _context;
-    public UsuariasController(AppDbContext context)
+   private readonly IUsuariasService _service;
+    public UsuariasController(IUsuariasService service)
     {
-        _context = context;
+        _service = service;
     }
     
     [HttpGet]
     public async Task<IActionResult> ListarUsuarias()
     {
-        var Usuarias = await _context.Usuarias.ToListAsync();
-        return Ok(Usuarias);
+        var usuarias = await _service.ListarUsuariasAsync();
+        return Ok(usuarias);
     }
     [HttpGet("{id}")]
     public async Task<IActionResult> BuscarPorId(int id)
     {
-        if(id <= 0)
+        var tarefaID = await _service.BuscarTarefaId(id);
+        if(!tarefaID)
         {
-            return BadRequest("Id deve ser maior que zero.");
+            return NotFound($"Usuária não possui tarefas associadas.");
         }
-        var Usuaria = await _context.Usuarias.FindAsync(id);
-        if(Usuaria == null)
+        var usuariaId = await _service.BuscarPorIdAsync(id);
+        if(usuariaId == null)
         {
-            return NotFound($"Usuaria {id} não encontrada.");
+            return NotFound($"Usuária {id} não encontrada.");
         }
-        return Ok(Usuaria);
+        return Ok(usuariaId);
     }
 
     [HttpPost]
@@ -45,9 +47,15 @@ public class UsuariasController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-        _context.Usuarias.Add(usuaria);
-        await _context.SaveChangesAsync();
-        return Ok($"Usuária {usuaria.Nome} cadastrada.");
+        try
+        {
+            var usuariaCriada = await _service.CriarUsuariaAsync(usuaria);
+            return CreatedAtAction(nameof(BuscarPorId), new {id = usuariaCriada.Id}, usuariaCriada);
+        }
+        catch(ArgumentException ex)
+        {
+            return BadRequest(ex);
+        }
     }
 
     [HttpPut("{id}")]
@@ -57,7 +65,7 @@ public class UsuariasController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-        var usuaria = await _context.Usuarias.FindAsync(usuariaAtualizada.Id);
+        var usuaria = await _service.AtualizarUsuariaAsync(usuariaAtualizada);
         if(usuaria == null)
         {
             return NotFound($"Usuaria {usuariaAtualizada.Nome} não encontrada.");
@@ -67,35 +75,18 @@ public class UsuariasController : ControllerBase
         usuaria.Email = usuariaAtualizada.Email;
         usuaria.Senha = usuariaAtualizada.Senha;
 
-        await _context.SaveChangesAsync();
         return Ok($"Informações da usuária {usuariaAtualizada.Nome} atualizadas.");
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> RemoverUsuaria(int id)
     {
-        var usuaria = await _context.Usuarias.FindAsync(id);
-        if(usuaria == null)
+        var usuaria = await _service.RemoverUsuariaAsync(id);
+        if(!usuaria)
         {
             return NotFound($"Usuária {id} não encontrada.");   
         }
-        var tarefa = await _context.Tarefas.FindAsync(id);
-        
-        // var query = await _context.Usuarias.Join(
-        //     _context.Tarefas,
-        //     u => u.Id,
-        //     t => t.UsuariaId,
-        //     (u, t) => new {id = t.Id}
-        //     ).ToListAsync();
-        
-        // if(query.Count > 0)
-        // {
-        //     return NotFound("Tarefa associada a Usuária, delete a tarefa antes.");
-        // }
-
-        _context.Usuarias.Remove(usuaria);
-        await _context.SaveChangesAsync();
-        return Ok($"Usuária {id} deletada.");
+        return NoContent();
     }
 
 }

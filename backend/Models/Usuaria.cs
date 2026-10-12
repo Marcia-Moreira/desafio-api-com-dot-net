@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-namespace GerenciadorTarefas.API.Models
+using GerenciadorTarefas.API.TarefasModels;
+namespace GerenciadorTarefas.API.UsuariasModels
 {
     public class Usuaria
     {
@@ -9,5 +10,13 @@ namespace GerenciadorTarefas.API.Models
         public string Nome { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Senha { get; set; } = string.Empty;
+    }
+
+    public class UsuariaTarefas
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; } = string.Empty;
+        public Tarefa? Titulo { get; }
+        public Tarefa? Descricao { get; }
     }
 }
