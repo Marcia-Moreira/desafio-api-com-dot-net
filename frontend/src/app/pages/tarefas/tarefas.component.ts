@@ -80,8 +80,28 @@ import { Usuaria } from '../../models/usuaria.model';
         CARREGANDO REGISTROS DE TAREFAS...
       </div>
 
+      <!-- Alerta de Conexão com a API -->
+      <div *ngIf="!carregando && erroConexao" class="pixel-window mb-20">
+        <div class="pixel-window-title" style="background: #ff3344;">
+          <span>ALERTA: BACKEND .NET DESCONECTADO</span>
+        </div>
+        <div class="pixel-window-body text-center" style="padding: 24px;">
+          <p style="color: #ff3344; font-family: var(--font-pixel); font-size: 9px; margin-bottom: 12px;">
+            ⚠️ NÃO FOI POSSÍVEL CONECTAR À API (PORTA 5058)
+          </p>
+          <p style="font-size: 19px; color: var(--pixel-text); margin-bottom: 16px; line-height: 1.5;">
+            O servidor Backend precisa estar em execução para salvar e carregar dados.<br>
+            Execute em outro terminal: <br>
+            <code style="background: #000; color: #00ff66; padding: 4px 10px; border: 1px solid #333; display: inline-block; margin-top: 8px;">cd backend && dotnet run</code>
+          </p>
+          <button type="button" class="btn-pixel btn-green" (click)="carregarDados()">
+            ► [ 🔄 TENTAR CONECTAR NOVAMENTE ]
+          </button>
+        </div>
+      </div>
+
       <!-- Estado Vazio -->
-      <div *ngIf="!carregando && tarefasFiltradas.length === 0" class="empty-state">
+      <div *ngIf="!carregando && !erroConexao && tarefasFiltradas.length === 0" class="empty-state">
         <span class="empty-state-icon">📋</span>
         <p>
           NENHUMA TAREFA ENCONTRADA COM OS FILTROS SELECIONADOS.<br>
@@ -391,6 +411,7 @@ export class TarefasComponent implements OnInit {
   usuarias: Usuaria[] = [];
   carregando = false;
   salvando = false;
+  erroConexao = false;
 
   // Filtros
   termoBusca = '';
@@ -423,6 +444,7 @@ export class TarefasComponent implements OnInit {
 
   carregarDados(): void {
     this.carregando = true;
+    this.erroConexao = false;
     this.usuariaService.listar().subscribe({
       next: (uList) => {
         this.usuarias = uList;
@@ -439,11 +461,15 @@ export class TarefasComponent implements OnInit {
       next: (dados) => {
         this.tarefas = dados;
         this.carregando = false;
+        this.erroConexao = false;
       },
       error: (err) => {
         this.carregando = false;
-        const msg = err.error?.message || err.message || 'Falha ao carregar tarefas da API.';
-        this.notificationService.error(`Erro ao buscar tarefas: ${msg}`);
+        this.erroConexao = (err.status === 0);
+        const msg = err.status === 0
+          ? 'Servidor Backend offline! Inicie com "dotnet run" na pasta backend (porta 5058).'
+          : (err.error?.message || err.message || 'Falha ao carregar tarefas da API.');
+        this.notificationService.error(msg);
       }
     });
   }

@@ -46,7 +46,7 @@ import { ToastComponent } from './components/toast/toast.component';
     <footer class="pixel-footer">
       <div class="container text-center">
         <p>
-          👾 TASKMASTER 95 • DESENVOLVIDO POR <strong>MARIANA LEMOS</strong> (INTEGRANTE D)
+          👾 TASKMASTER 95 • DESENVOLVIDO POR <strong>SQUAD CARMEN PORTINHO</strong>
         </p>
         <p class="footer-sub">
           BOOTCAMP BACKEND .NET & FRONTEND ANGULAR • WOMAKERSCODE • TODOS OS DIREITOS RESERVADOS 1995-2026

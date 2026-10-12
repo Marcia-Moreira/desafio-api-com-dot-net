@@ -60,7 +60,10 @@ if (app.Environment.IsDevelopment())
 // 7. Ativa o CORS antes dos Controllers
 app.UseCors("PermitirAngular");
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 // 8. Mapeia as rotas dos Controllers
 app.MapControllers();

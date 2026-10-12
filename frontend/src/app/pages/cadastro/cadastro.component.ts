@@ -40,7 +40,7 @@ import { Usuaria } from '../../models/usuaria.model';
                   #nomeModel="ngModel"
                   required
                   maxlength="80"
-                  placeholder="Ex: Mariana Lemos"
+                  placeholder="Seu nome aqui"
                 />
                 <span class="field-error" *ngIf="nomeModel.invalid && nomeModel.touched">
                   ! O nome é obrigatório (máx 80 caracteres).
@@ -59,7 +59,7 @@ import { Usuaria } from '../../models/usuaria.model';
                   #emailModel="ngModel"
                   required
                   email
-                  placeholder="Ex: mariana@email.com"
+                  placeholder="Seu e-mail aqui"
                 />
                 <span class="field-error" *ngIf="emailModel.invalid && emailModel.touched">
                   ! Informe um e-mail válido.
@@ -229,8 +229,10 @@ export class CadastroComponent implements OnInit {
       },
       error: (err) => {
         this.carregando = false;
-        const msg = err.error?.message || err.message || 'Falha ao carregar usuárias da API.';
-        this.notificationService.error(`Erro ao conectar com a API: ${msg}`);
+        const msg = err.status === 0
+          ? 'Servidor Backend offline! Inicie a API com "dotnet run" na pasta backend (porta 5058).'
+          : (err.error?.mensagem || err.error?.message || err.message || 'Falha ao carregar usuárias da API.');
+        this.notificationService.error(msg);
       }
     });
   }
@@ -251,9 +253,16 @@ export class CadastroComponent implements OnInit {
       },
       error: (err) => {
         this.salvando = false;
-        const erroMsg = typeof err.error === 'string' 
-          ? err.error 
-          : err.error?.mensagem || err.error?.title || 'Erro ao cadastrar usuária.';
+        let erroMsg = 'Erro ao cadastrar usuária.';
+        if (err.status === 0) {
+          erroMsg = 'Servidor Backend não conectado! Verifique se a API está rodando com "dotnet run" na porta 5058.';
+        } else if (typeof err.error === 'string') {
+          erroMsg = err.error;
+        } else if (err.error?.mensagem) {
+          erroMsg = err.error.mensagem;
+        } else if (err.error?.title) {
+          erroMsg = err.error.title;
+        }
         this.notificationService.error(erroMsg);
       }
     });
