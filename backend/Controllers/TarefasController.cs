@@ -73,25 +73,20 @@ public class TarefasController : ControllerBase
         {
             return BadRequest(ModelState);
         }
+        tarefaAtualizada.Id = id;
+        var usuariaExiste = await _service.BuscarUsuariaId(tarefaAtualizada.UsuariaId);
+        if(!usuariaExiste)
+        {
+            return NotFound($"Usuária {tarefaAtualizada.UsuariaId} não encontrada.");
+        }
+
         var tarefa = await _service.AtualizarTarefaAsync(id, tarefaAtualizada);
         if(tarefa == null)
         {
-            return NotFound($"Tarefa {tarefaAtualizada.Id} não encontrada.");
-        }
-        
-        var usuaria = await _service.AtualizarTarefaAsync(tarefaAtualizada.UsuariaId, tarefaAtualizada);
-        if(usuaria == null)
-        {
-            return NotFound($"Usuaria {tarefaAtualizada.UsuariaId} não encontrada.");
+            return NotFound($"Tarefa {id} não encontrada.");
         }
 
-        tarefa.Titulo = tarefaAtualizada.Titulo;
-        tarefa.Descricao = tarefaAtualizada.Descricao;
-        tarefa.DataVencimento = tarefaAtualizada.DataVencimento;
-        tarefa.Concluida = tarefaAtualizada.Concluida;
-        tarefa.UsuariaId = tarefaAtualizada.UsuariaId;
-
-        return Ok($"Tarefa {tarefaAtualizada.Id} atualizada.");
+        return Ok(tarefa);
     }
 
     [HttpDelete("{id}")]

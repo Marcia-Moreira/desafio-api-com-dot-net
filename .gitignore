@@ -485,3 +485,8 @@ $RECYCLE.BIN/
 # Diversos:
 rascunhos-mm/
 README-1.md
+
+# Frontend (Angular)
+frontend/dist/
+frontend/.angular/
+frontend/node_modules/

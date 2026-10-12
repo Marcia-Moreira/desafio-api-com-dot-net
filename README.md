@@ -82,10 +82,16 @@ O desenvolvimento é colaborativo, onde cada integrante é responsável por uma 
 * **O que fazer:** Proteger a API contra dados inválidos e documentar as rotas.
 * **Detalhes:** Aplicar Data Annotations nas entidades (ex: `[Required]`, `[EmailAddress]`). Criar retornos padronizados com os Status HTTP corretos (ex: `404 NotFound`, `400 BadRequest`) e finalizar a configuração visual do Swagger para testes da equipe.
 
-### Mariana Lemos (Integrante D) — Front-end em Angular [🔄 A FAZER]
+### Mariana Lemos (Integrante D) — Front-end em Angular [✅ CONCLUÍDO]
 
-* **O que fazer:** Criar a interface visual da aplicação.
-* **Detalhes:** Desenvolver a tela de cadastro e a listagem de tarefas. Utilizar o `HttpClient` para conectar o visual aos endpoints construídos pelo Back-end, garantindo alertas visuais de sucesso ou erro na tela.
+* **O que foi feito:** Desenvolvimento da interface visual completa em Angular com estética **Pixel Art / Retrô anos 90 (TaskMaster 95)**.
+* **Detalhes:**
+  * **Tela de Cadastro de Usuária (`/cadastro`):** Formulário interativo com validações, listagem de usuárias cadastradas e exclusão com feedback visual.
+  * **Tela de Listagem e Gestão de Tarefas (`/tarefas`):** Filtro por usuária, filtro por status (todas, pendentes, concluídas) e busca textual.
+  * **CRUD Completo de Tarefas:** Modal para criação e edição de tarefas, botão para marcar/desmarcar conclusão instantaneamente e botão para excluir tarefas.
+  * **Comunicação com a API:** Implementação de serviços com `HttpClient` conectando aos endpoints do backend .NET com tratamento de erros.
+  * **Alertas Visuais:** Sistema de notificações / toasts com estética pixel art para confirmações de sucesso, alertas e erros de requisições.
+  * **Estética Retrô Anos 90:** Fontes pixelizadas (*Press Start 2P* e *VT323*), janelas estilo Win95, efeitos de scanline CRT e paleta de cores neon.
 
 ## 🔀 Regras de Colaboração e Versionamento (Git Flow)
 
